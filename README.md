@@ -20,15 +20,4 @@ This repository contains my personal system configurations, installation scripts
     * **Fedora:** `dnf` repositories and packages.
     * **macOS:** `Homebrew` formulas and casks.
 * **App Preferences:** Automated settings for VS Code, Terminal, and Git.
-* **Fonts:** Nerd Fonts installation scripts.
-
-## 🚀 Installation
-
-### Windows 11
-Open PowerShell as Administrator and run:
-
-```powershell
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
-git clone [https://github.com/YOUR_USERNAME/dotfiles.git](https://github.com/YOUR_USERNAME/dotfiles.git)
-cd dotfiles/windows
-.\setup.ps1
+* **Fonts:** Not font decied
