@@ -1,0 +1,44 @@
+# Taps
+tap "homebrew/bundle"
+tap "homebrew/services"
+
+# Core Binaries
+brew "git"
+brew "wget"
+brew "python"
+brew "mas"
+brew "awscli"
+brew "jq"
+brew "gemini-cli"
+brew "tealdeer"
+brew "mole"
+
+# Development & Terminal
+cask "antigravity"        # Google Editor
+cask "warp"               # Terminal
+cask "mactex-no-gui"      # Full LaTeX Compiler
+
+# Browsers
+cask "arc"
+
+# Productivity & Utilities
+cask "domzilla-caffeine"
+cask "notion"
+cask "obsidian"
+cask "raycast"
+cask "rustdesk"
+cask "wispr-flow"
+cask "mos"                # Smooth scrolling
+cask "modrinth"           # Modrinth App
+
+# Social & Communication
+cask "whatsapp"
+cask "discord"
+
+# Storage & Sync
+cask "onedrive"
+cask "google-drive"
+
+# Mac App Store Apps
+mas "Kindle", id: 302584613
+mas "WhatsApp", id: 310633997
