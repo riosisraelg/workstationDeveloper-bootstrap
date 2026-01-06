@@ -42,7 +42,7 @@ run_section() {
 install_homebrew() {
     if ! command -v brew &> /dev/null; then
         log_info "Homebrew not found. Installing..."
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || return 1
+        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || return 1
         
         if [[ -f /opt/homebrew/bin/brew ]]; then
             eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -52,6 +52,9 @@ install_homebrew() {
     else
         log_info "Homebrew is already installed."
     fi
+
+    log_info "Installing Boring Notch..."
+    brew install --cask TheBoredTeam/boring-notch/boring-notch --no-quarantine || true
 }
 
 install_packages() {
@@ -84,6 +87,34 @@ setup_python() {
         sleep 5
         pip3 install pandas
     } || return 1
+}
+
+setup_third_party() {
+    log_info "Installing Third Party Apps..."
+    # Install WisprFlow
+    ## Navigate to your DMG file location
+    cd $HOME/Downloads
+    curl -LO wisprflow.dmg https://dl.wisprflow.ai/mac-apple/latest
+
+    ## Mount the DMG 
+    hdiutil attach wisprflow.dmg
+
+    ## Copy the app to Applications 
+    sudo cp -R /Volumes/wisprflow/wisprflow.app /Applications/
+
+    ## Eject the DMG 
+    hdiutil detach /Volumes/wisprflow.dmg
+
+    ## Validate installation
+    if [[ -f /Applications/wisprflow.app ]]; then
+        log_info "WisprFlow installed successfully!"
+    else
+        log_error "WisprFlow installation failed!"
+        return 1
+    fi
+
+    echo "wisprflow.dmg installed successfully!"
+
 }
 
 setup_defaults() {

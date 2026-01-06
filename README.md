@@ -8,16 +8,34 @@ This repository contains my personal system configurations, installation scripts
 
 | OS | Shell | Script Entry Point |
 | :--- | :--- | :--- |
-| **Windows 11** | PowerShell | `./install.ps1` |
-| **Fedora Workstation 43** | Bash | `./install.sh` |
-| **macOS 26.1** | Zsh | `./install.zsh` |
+| **Windows 11** | PowerShell | `./windows/install.ps1` |
+| **Fedora Workstation 43** | Bash | `./fedora/install.sh` |
+| **macOS 26.1** | Zsh | `./macos/install.zsh` |
 
 ## 📦 What's Included
 
 * **Shell Configurations:** Custom setups for `.zshrc`, `.bashrc`, and PowerShell profiles.
 * **Package Management:**
-    * **Windows:** `winget` and `choco` packages.
-    * **Fedora:** `dnf` repositories and packages.
-    * **macOS:** `Homebrew` formulas and casks.
+  * **Windows:** `winget` and `choco` packages.
+  * **Fedora:** `dnf` repositories and packages.
+  * **macOS:** `Homebrew` formulas and casks.
 * **App Preferences:** Automated settings for VS Code, Terminal, and Git.
 * **Fonts:** Not font decied
+
+## Quick Start
+
+Script files required to setup to execute are:
+
+```bash
+chmod +x ./windows/install.ps1
+chmod +x ./fedora/install.sh
+chmod +x ./macos/install.zsh
+```
+
+To run the scripts:
+
+```bash
+./windows/install.ps1   
+./fedora/install.sh
+./macos/install.zsh
+```

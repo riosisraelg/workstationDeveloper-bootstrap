@@ -22,14 +22,16 @@ cask "mactex-no-gui"      # Full LaTeX Compiler
 cask "arc"
 
 # Productivity & Utilities
+cask "antinote"
 cask "domzilla-caffeine"
 cask "notion"
 cask "obsidian"
 cask "raycast"
 cask "rustdesk"
-cask "wispr-flow"
-cask "mos"                # Smooth scrolling
 cask "modrinth"           # Modrinth App
+
+# Games
+cask "minecraft"
 
 # Social & Communication
 cask "whatsapp"
@@ -42,3 +44,4 @@ cask "google-drive"
 # Mac App Store Apps
 mas "Kindle", id: 302584613
 mas "WhatsApp", id: 310633997
+mas "Flighty", id: 1358823008
