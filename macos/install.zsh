@@ -1,31 +1,23 @@
 #!/bin/zsh
 
 # --- Global Configuration ---
-LOG_FILE="$HOME/Downloads/workstationDeveloper-bootstrap/install.log"
-DOTFILES_DIR="$HOME/Downloads/workstationDeveloper-bootstrap"
+LOG_FILE="$HOME/workstationDeveloper-bootstrap/install.log"
+DOTFILES_DIR="$HOME/workstationDeveloper-bootstrap"
 BREWFILE="$DOTFILES_DIR/macos/Brewfile"
 CONFIG_JSON="$DOTFILES_DIR/macos/aws-config.json"
 
-# Initialize Log
+# Clear previous log
 echo "--- macOS Setup Log - $(date) ---" > "$LOG_FILE"
 
 # --- Helper Functions ---
 log_info() {
-    local msg="$1"
-    echo "ℹ️  $msg"
-    echo "[INFO] $(date '+%H:%M:%S') - $msg" >> "$LOG_FILE"
-}
-
-log_warning() {
-    local msg="$1"
-    echo "⚠️  $msg"
-    echo "[WARN] $(date '+%H:%M:%S') - $msg" >> "$LOG_FILE"
+    echo "ℹ️  $1"
+    echo "[INFO] $1" >> "$LOG_FILE"
 }
 
 log_error() {
-    local msg="$1"
-    echo "❌ $msg"
-    echo "[ERROR] $(date '+%H:%M:%S') - $msg" >> "$LOG_FILE"
+    echo "❌ $1"
+    echo "[ERROR] $1" >> "$LOG_FILE"
 }
 
 run_section() {
@@ -33,60 +25,46 @@ run_section() {
     local func_name="$2"
 
     echo ""
-    log_info ">>> Starting Section: $section_name"
+    log_info "Starting Section: $section_name"
     
-    # Run the section command in a block, capturing stdout/stderr
-    # We use 'tee' to show output live while writing to log.
-    # We use pipestatus to get the exit code of the function, not tee.
-    {
-        $func_name
-    } 2>&1 | tee -a "$LOG_FILE"
-    
-    local exit_code=${pipestatus[1]}
-
-    if [[ $exit_code -eq 0 ]]; then
+    # Run the function; capturing output could be done, but we want live output too.
+    # We use a subshell or simple call. Standard call is fine.
+    # We capture exit status.
+    if $func_name; then
         log_info "Section '$section_name' completed successfully."
     else
-        log_error "Section '$section_name' failed with exit code $exit_code. Proceeding..."
+        log_error "Section '$section_name' failed or had errors. Continuing to next section..."
     fi
 }
+
+# --- Section Definitions ---
+
 install_homebrew() {
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    brew update
-    brew upgrade
-    brew install git
-    brew install wget
-    brew install python
-    brew install node
-    brew install yarn
-    brew install mas
-    brew install awscli
-    brew install jq
-    brew install gemini-cli
-    brew install tealdeer
-    brew install mole
+    if ! command -v brew &> /dev/null; then
+        log_info "Homebrew not found. Installing..."
+        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || return 1
+        
+        if [[ -f /opt/homebrew/bin/brew ]]; then
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+        elif [[ -f /usr/local/bin/brew ]]; then
+            eval "$(/usr/local/bin/brew shellenv)"
+        fi
+    else
+        log_info "Homebrew is already installed."
+    fi
 
-    brew install --cask antigravity
-    brew install --cask warp
-    brew install --cask mactex-no-gui
-    brew install --cask TheBoredTeam/boring-notch/boring-notch --no-quarantine
-    brew install --cask arc
-    brew install --cask antinote
-    brew install --cask domzilla-caffeine
-    brew install --cask notion
-    brew install --cask obsidian
-    brew install --cask raycast
-    brew install --cask rustdesk
-    brew install --cask modrinth
-    brew install --cask minecraft
-    brew install --cask whatsapp
-    brew install --cask discord
-    brew install --cask onedrive
-    brew install --cask google-drive
+    log_info "Installing Boring Notch..."
+    brew install --cask TheBoredTeam/boring-notch/boring-notch --no-quarantine || true
+}
 
-    mas install 302584613
-    mas install 310633997
-    mas install 1358823008
+install_packages() {
+    if [[ -f "$BREWFILE" ]]; then
+        log_info "Installing dependencies from Brewfile..."
+        brew bundle --file="$BREWFILE" || return 1
+    else
+        log_error "Brewfile not found at $BREWFILE!"
+        return 1
+    fi
 }
 
 setup_python() {
@@ -176,27 +154,21 @@ update_tealdeer() {
     fi
 }
 
-# --- Execution Flow ---
+# --- Execution ---
+echo "� Starting macOS Setup..."
+log_info "Setup started."
 
-echo "🚀 Starting macOS Workstation Setup..."
-
-# 1. Core Tools
 run_section "Homebrew Setup" install_homebrew
-
-# 2. Languages & Runtime
+run_section "Package Installation" install_packages
 run_section "Python Setup" setup_python
-
-# 3. System Config
 run_section "System Defaults" setup_defaults
 run_section "Touch ID Setup" setup_touchid
 run_section "AWS Config" configure_aws
-
-# 4. UI & Apps
 run_section "Warp Theme" setup_warp
-run_section "Third Party Apps" setup_third_party
 run_section "Dotfiles Link" link_dotfiles
 run_section "Tealdeer Update" update_tealdeer
+# run_section "Font Installation" install_fonts
 
 echo ""
-echo "🎉 macOS Setup Process Finished!"
-echo "📄 Log file available at: $LOG_FILE"
+echo "🎉 macOS Setup Process Finished! (Check $LOG_FILE for any errors)"
+log_info "Setup finished."
