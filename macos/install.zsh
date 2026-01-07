@@ -122,6 +122,15 @@ configure_aws() {
     fi
 }
 
+configure_vscode() {
+    
+}
+
+configure_git() {
+    git config --global user.name "Israel Rios"
+    git config --global user.email "riosisraelg@icloud.com"
+}
+
 setup_warp() {
     local warp_dir="$HOME/.warp"
     local themes_dir="$warp_dir/themes"
