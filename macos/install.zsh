@@ -1,70 +1,50 @@
 #!/bin/zsh
 
 # --- Global Configuration ---
-LOG_FILE="$HOME/workstationDeveloper-bootstrap/install.log"
-DOTFILES_DIR="$HOME/workstationDeveloper-bootstrap"
-BREWFILE="$DOTFILES_DIR/macos/Brewfile"
+DOTFILES_DIR="$HOME/Downloads/workstationDeveloper-bootstrap"
 CONFIG_JSON="$DOTFILES_DIR/macos/aws-config.json"
 
-# Clear previous log
-echo "--- macOS Setup Log - $(date) ---" > "$LOG_FILE"
-
-# --- Helper Functions ---
-log_info() {
-    echo "ℹ️  $1"
-    echo "[INFO] $1" >> "$LOG_FILE"
-}
-
-log_error() {
-    echo "❌ $1"
-    echo "[ERROR] $1" >> "$LOG_FILE"
-}
-
-run_section() {
-    local section_name="$1"
-    local func_name="$2"
-
-    echo ""
-    log_info "Starting Section: $section_name"
-    
-    # Run the function; capturing output could be done, but we want live output too.
-    # We use a subshell or simple call. Standard call is fine.
-    # We capture exit status.
-    if $func_name; then
-        log_info "Section '$section_name' completed successfully."
-    else
-        log_error "Section '$section_name' failed or had errors. Continuing to next section..."
-    fi
-}
-
-# --- Section Definitions ---
-
 install_homebrew() {
-    if ! command -v brew &> /dev/null; then
-        log_info "Homebrew not found. Installing..."
-        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || return 1
-        
-        if [[ -f /opt/homebrew/bin/brew ]]; then
-            eval "$(/opt/homebrew/bin/brew shellenv)"
-        elif [[ -f /usr/local/bin/brew ]]; then
-            eval "$(/usr/local/bin/brew shellenv)"
-        fi
-    else
-        log_info "Homebrew is already installed."
-    fi
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    echo >> /Users/riosisraelg/.zprofile
+    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/riosisraelg/.zprofile
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+    brew update
+    brew upgrade
+    brew install git
+    brew install wget
+    brew install python
+    brew install node
+    brew install yarn
+    brew install mas
+    brew install awscli
+    brew install jq
+    brew install gemini-cli
+    brew install tealdeer
+    brew install mole
+    brew install ykman
 
-    log_info "Installing Boring Notch..."
-    brew install --cask TheBoredTeam/boring-notch/boring-notch --no-quarantine || true
-}
+    brew install --cask antigravity
+    brew install --cask warp
+    brew install --cask TheBoredTeam/boring-notch/boring-notch --no-quarantine
+    brew install --cask arc
+    brew install --cask antinote
+    brew install --cask domzilla-caffeine
+    brew install --cask notion
+    brew install --cask obsidian
+    brew install --cask raycast
+    brew install --cask rustdesk
+    brew install --cask modrinth
+    brew install --cask minecraft
+    brew install --cask whatsapp
+    brew install --cask discord
+    brew install --cask onedrive
+    brew install --cask google-drive
+    brew install --cask mactex-no-gui
 
-install_packages() {
-    if [[ -f "$BREWFILE" ]]; then
-        log_info "Installing dependencies from Brewfile..."
-        brew bundle --file="$BREWFILE" || return 1
-    else
-        log_error "Brewfile not found at $BREWFILE!"
-        return 1
-    fi
+    mas install 302584613
+    mas install 310633997
+    mas install 1358823008
 }
 
 setup_python() {
@@ -122,15 +102,6 @@ configure_aws() {
     fi
 }
 
-configure_vscode() {
-    
-}
-
-configure_git() {
-    git config --global user.name "Israel Rios"
-    git config --global user.email "riosisraelg@icloud.com"
-}
-
 setup_warp() {
     local warp_dir="$HOME/.warp"
     local themes_dir="$warp_dir/themes"
@@ -163,21 +134,27 @@ update_tealdeer() {
     fi
 }
 
-# --- Execution ---
-echo "� Starting macOS Setup..."
-log_info "Setup started."
+# --- Execution Flow ---
 
-run_section "Homebrew Setup" install_homebrew
-run_section "Package Installation" install_packages
+echo "🚀 Starting macOS Workstation Setup..."
+
+# 1. Core Tools
+install_homebrew
+
+# 2. Languages & Runtime
 run_section "Python Setup" setup_python
+
+# 3. System Config
 run_section "System Defaults" setup_defaults
 run_section "Touch ID Setup" setup_touchid
 run_section "AWS Config" configure_aws
+
+# 4. UI & Apps
 run_section "Warp Theme" setup_warp
+run_section "Third Party Apps" setup_third_party
 run_section "Dotfiles Link" link_dotfiles
 run_section "Tealdeer Update" update_tealdeer
-# run_section "Font Installation" install_fonts
 
 echo ""
-echo "🎉 macOS Setup Process Finished! (Check $LOG_FILE for any errors)"
-log_info "Setup finished."
+echo "🎉 macOS Setup Process Finished!"
+echo "📄 Log file available at: $LOG_FILE"
