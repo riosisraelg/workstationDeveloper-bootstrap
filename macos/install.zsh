@@ -14,6 +14,7 @@ install_homebrew() {
     brew install git
     brew install wget
     brew install python
+    brew install openjdk
     brew install node
     brew install yarn
     brew install mas
