@@ -25,6 +25,7 @@ install_homebrew() {
     brew install tealdeer
     brew install mole
     brew install ykman
+    npm install pm2@latest -g
 
     brew install --cask antigravity
     brew install --cask warp
