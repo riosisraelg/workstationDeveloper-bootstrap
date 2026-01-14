@@ -15,6 +15,7 @@ install_homebrew() {
     brew install wget
     brew install python
     brew install openjdk
+    brew install openjdk@17
     brew install node
     brew install yarn
     brew install mas
@@ -39,6 +40,7 @@ install_homebrew() {
     brew install --cask minecraft
     brew install --cask whatsapp
     brew install --cask discord
+    brew install --cask utm
     brew install --cask onedrive
     brew install --cask google-drive
     brew install --cask mactex-no-gui
